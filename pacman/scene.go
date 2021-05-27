@@ -3,7 +3,7 @@ package pacman
 import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	//"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	//pacimages "github.com/kgosse/pacmanresources/images"
 )
 

@@ -4,8 +4,7 @@ import "github.com/hajimehoshi/ebiten"
 
 // Game holds all the pacman game data
 type Game struct {
-	scene *scene
-	//in    input
+	scene *scene //contains a scene inside the game
 }
 
 // NewGame is a Game constructor

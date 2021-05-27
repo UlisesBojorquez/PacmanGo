@@ -3,19 +3,17 @@ package main
 import (
 	"log"
 
-	"github.com/UlisesBojorquez/pacman"
-	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/UlisesBojorquez/PacmanGo/pacman"
+	"github.com/hajimehoshi/ebiten"
 )
 
 func main() {
 
 	g := pacman.NewGame() //create new game, pacman is the dir and NewGame is in game.go
 
-	if err := ebiten.RunGame(g); err != nil {
+	if err := ebiten.Run(g.Update, g.ScreenWidth(), g.ScreenHeight(), 2, "Pacman"); err != nil {
 		log.Fatal(err)
 	}
-	ebiten.SetWindowSize(640, 480)  //set the size of the window
-	ebiten.SetWindowTitle("Pacman") //set the title of the window
 
 }
 
