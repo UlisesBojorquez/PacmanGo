@@ -2,11 +2,12 @@ package pacman
 
 const (
 	backgroundImageSize = 100
-	screenWidth         = backgroundImageSize * 7
-	screenHeight        = backgroundImageSize * 7 //backgroundElem
-	stageBlocSize       = 32                      //size if the image 32x32
+	//screenWidth         = backgroundImageSize * 7
+	//screenHeight        = backgroundImageSize * 7 //backgroundElem
+	stageBlocSize = 32 //size if the image 32x32
 )
 
+/*USED FOR THE IMAGES*/
 type elem int
 
 const (
@@ -45,4 +46,15 @@ const (
 	pinkyElem  // w
 	fruitElem  // x
 	backgroundElem
+)
+
+/*USED FOT THE INPUT*/
+type input int
+
+const (
+	_ input = iota
+	up
+	right
+	down
+	left
 )

@@ -16,7 +16,7 @@ import (
 const (
 	keyText     = "KEYS"
 	rText       = "r: Restart"
-	hText       = "hjkl: Move"
+	hText       = "aswd: Move"
 	livesText   = "LIVES"
 	scoreText   = "SCORE"
 	restartText = "R: Restart"

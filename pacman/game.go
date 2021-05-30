@@ -5,6 +5,7 @@ import "github.com/hajimehoshi/ebiten"
 // Game holds all the pacman game data
 type Game struct {
 	scene *scene //contains a scene inside the game
+	input input  //used to control the keys of the player
 }
 
 //position struct
@@ -32,6 +33,6 @@ func (g *Game) ScreenHeight() int {
 
 // Update updates the screen
 func (g *Game) Update(screen *ebiten.Image) error {
-
-	return g.scene.update(screen)
+	g.input = keyPressed()
+	return g.scene.update(screen, g.input)
 }

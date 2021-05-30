@@ -3,9 +3,6 @@ package pacman
 import (
 	"github.com/hajimehoshi/ebiten"
 
-	//"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	//pacimages "github.com/kgosse/pacmanresources/images"
-	//pacimages "github.com/UlisesBojorquez/pacmanresources/tree/master/images"
 	pacimages "github.com/UlisesBojorquez/PacmanGo/images"
 )
 
@@ -43,10 +40,11 @@ func newScene(st *stage) *scene {
 }
 
 //it works to show things in the screen
-func (s *scene) update(screen *ebiten.Image) error {
+func (s *scene) update(screen *ebiten.Image, in input) error {
 	if ebiten.IsDrawingSkipped() { // when IsDrawingSkipped is true, the rendered result is not adopted.
 		return nil
 	}
+	s.player.move(s.matrix, in) //player movement
 	screen.Clear()
 	screen.DrawImage(s.wallSurface, nil)
 	s.dotManager.draw(screen)                            //paint the dots on screen
