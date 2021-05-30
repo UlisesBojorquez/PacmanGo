@@ -16,6 +16,7 @@ type scene struct {
 	stage         *stage //this is the map walls array
 	dotManager    *dotManager
 	bigDotManager *bigDotManager
+	player        *player
 }
 
 //Create a new Scene
@@ -44,6 +45,7 @@ func (s *scene) update(screen *ebiten.Image) error {
 	screen.DrawImage(s.wallSurface, nil)
 	s.dotManager.draw(screen)    //paint the dots on screen
 	s.bigDotManager.draw(screen) //paint the bigdots on screen
+	s.player.draw(screen)
 	//ebitenutil.DebugPrint(screen, "Hello World") // show in the screen what we see
 	return nil
 }
@@ -71,12 +73,14 @@ func (s *scene) createStage() {
 			} else { //the rest of our constans
 				s.matrix[i][j] = elem(s.stage.matrix[i][j] - 'a' + 10) //for example for 10 is char a is 97 in decimal minus char a which is 97 +10 give is 10
 			}
-			/*PART TO ADD THE DOTS*/
+			/*PART TO ADD THE REST*/
 			switch s.matrix[i][j] {
 			case dotElem:
 				s.dotManager.add(i, j)
 			case bigDotElem:
 				s.bigDotManager.add(i, j)
+			case playerElem:
+				s.player = newPlayer(i, j)
 			}
 		}
 	}

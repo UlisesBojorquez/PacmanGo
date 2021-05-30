@@ -22,6 +22,15 @@ func loadImage(b []byte) *ebiten.Image {
 	return ebImg
 }
 
+func loadImages(images [][]byte) []*ebiten.Image {
+	var res []*ebiten.Image
+	size := len(images)
+	for i := 0; i < size; i++ {
+		res = append(res, loadImage(images[i]))
+	}
+	return res
+}
+
 func handleError(e error) {
 	if e != nil {
 		panic(e)
