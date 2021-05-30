@@ -17,6 +17,7 @@ type scene struct {
 	dotManager    *dotManager
 	bigDotManager *bigDotManager
 	player        *player
+	ghostManager  *ghostManager
 }
 
 //Create a new Scene
@@ -29,6 +30,7 @@ func newScene(st *stage) *scene {
 	s.images = make(map[elem]*ebiten.Image) //we create the map from images
 	s.dotManager = newDotManager()          //initialice the dot
 	s.bigDotManager = newBigDotManager()    //initialice the bigdot
+	s.ghostManager = newGhostManager()      //initialice the ghostmanager
 	s.loadImages()                          //initialice the image attribute
 	s.createStage()                         //initialice matrix of elems
 	s.buildWallSurface()                    //initialice wall surface, paint it
@@ -46,6 +48,7 @@ func (s *scene) update(screen *ebiten.Image) error {
 	s.dotManager.draw(screen)    //paint the dots on screen
 	s.bigDotManager.draw(screen) //paint the bigdots on screen
 	s.player.draw(screen)
+	s.ghostManager.draw(screen)
 	//ebitenutil.DebugPrint(screen, "Hello World") // show in the screen what we see
 	return nil
 }
@@ -81,6 +84,14 @@ func (s *scene) createStage() {
 				s.bigDotManager.add(i, j)
 			case playerElem:
 				s.player = newPlayer(i, j)
+			case blinkyElem:
+				s.ghostManager.addGhost(i, j, blinkyElem)
+			case inkyElem:
+				s.ghostManager.addGhost(i, j, inkyElem)
+			case pinkyElem:
+				s.ghostManager.addGhost(i, j, pinkyElem)
+			case clydeElem:
+				s.ghostManager.addGhost(i, j, clydeElem)
 			}
 		}
 	}
