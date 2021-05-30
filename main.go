@@ -11,7 +11,7 @@ import (
 func main() {
 	g := pacman.NewGame() //create new game, pacman is the dir and NewGame is in game.go
 
-	if err := ebiten.Run(g.Update, g.ScreenWidth(), g.ScreenHeight(), 2, "Pacman"); err != nil { //2
+	if err := ebiten.Run(g.Update, g.ScreenWidth(), g.ScreenHeight(), 1, "Pacman"); err != nil { //2
 		log.Fatal(err)
 	}
 }

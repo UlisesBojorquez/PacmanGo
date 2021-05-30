@@ -18,6 +18,7 @@ type scene struct {
 	bigDotManager *bigDotManager
 	player        *player
 	ghostManager  *ghostManager
+	textManager   *textManager
 }
 
 //Create a new Scene
@@ -31,9 +32,12 @@ func newScene(st *stage) *scene {
 	s.dotManager = newDotManager()          //initialice the dot
 	s.bigDotManager = newBigDotManager()    //initialice the bigdot
 	s.ghostManager = newGhostManager()      //initialice the ghostmanager
-	s.loadImages()                          //initialice the image attribute
-	s.createStage()                         //initialice matrix of elems
-	s.buildWallSurface()                    //initialice wall surface, paint it
+	h := len(s.stage.matrix)
+	w := len(s.stage.matrix[0])
+	s.textManager = newTextManager(w*stageBlocSize, h*stageBlocSize) //initilice the textmanager
+	s.loadImages()                                                   //initialice the image attribute
+	s.createStage()                                                  //initialice matrix of elems
+	s.buildWallSurface()                                             //initialice wall surface, paint it
 
 	return s //return the pointer structure scene
 }
@@ -45,10 +49,11 @@ func (s *scene) update(screen *ebiten.Image) error {
 	}
 	screen.Clear()
 	screen.DrawImage(s.wallSurface, nil)
-	s.dotManager.draw(screen)    //paint the dots on screen
-	s.bigDotManager.draw(screen) //paint the bigdots on screen
-	s.player.draw(screen)
-	s.ghostManager.draw(screen)
+	s.dotManager.draw(screen)                            //paint the dots on screen
+	s.bigDotManager.draw(screen)                         //paint the bigdots on screen
+	s.player.draw(screen)                                //paint the player
+	s.ghostManager.draw(screen)                          //paint the ghosts
+	s.textManager.draw(screen, 0, 1, s.player.images[1]) //paint the text
 	//ebitenutil.DebugPrint(screen, "Hello World") // show in the screen what we see
 	return nil
 }
@@ -58,8 +63,11 @@ func (s *scene) screenWidth() int {
 	return w * stageBlocSize
 }
 func (s *scene) screenHeight() int {
+	//h := len(s.stage.matrix)
+	//return h * stageBlocSize
 	h := len(s.stage.matrix)
-	return h * stageBlocSize
+	sizeH := ((h*stageBlocSize)/backgroundImageSize + 2) * backgroundImageSize
+	return sizeH
 }
 
 func (s *scene) createStage() {
