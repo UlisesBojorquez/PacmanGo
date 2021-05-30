@@ -1,14 +1,12 @@
 package pacman
 
 import (
-	"bytes"
-	"image"
-
 	"github.com/hajimehoshi/ebiten"
 
 	//"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	//pacimages "github.com/kgosse/pacmanresources/images"
-	pacimages "github.com/UlisesBojorquez/pacmanresources/tree/master/images"
+	//pacimages "github.com/UlisesBojorquez/pacmanresources/tree/master/images"
+	pacimages "github.com/UlisesBojorquez/PacmanGo/images"
 )
 
 type scene struct {
@@ -55,7 +53,7 @@ func (s *scene) screenHeight() int {
 
 func (s *scene) createStage() {
 	h := len(s.stage.matrix)     //altura
-	w := len(s.stage.matrix[0])  //grosor
+	w := len(s.stage.matrix[0])  //ancho
 	s.matrix = make([][]elem, h) //we create the matrix with the number of rows
 	for i := 0; i < h; i++ {
 		s.matrix[i] = make([]elem, w)
@@ -64,7 +62,7 @@ func (s *scene) createStage() {
 			if c <= 9 {                     //used for numebers
 				s.matrix[i][j] = elem(c)
 			} else { //the rest of our constans
-				s.matrix[i][j] = elem(s.stage.matrix[i][j] - 'a') //for example for 10 is char a is 97 in decimal minus char a which is 97 +10 give is 10
+				s.matrix[i][j] = elem(s.stage.matrix[i][j] - 'a' + 10) //for example for 10 is char a is 97 in decimal minus char a which is 97 +10 give is 10
 			}
 		}
 	}
@@ -75,7 +73,7 @@ func (s *scene) buildWallSurface() {
 	w := len(s.stage.matrix[0])
 
 	sizeW := ((w*stageBlocSize)/backgroundImageSize + 1) * backgroundImageSize
-	sizeH := ((h*stageBlocSize)/backgroundImageSize + 1) * backgroundImageSize //1
+	sizeH := ((h*stageBlocSize)/backgroundImageSize + 2) * backgroundImageSize
 	s.wallSurface, _ = ebiten.NewImage(sizeW, sizeH, ebiten.FilterDefault)
 
 	for i := 0; i < sizeH/backgroundImageSize; i++ {
@@ -103,15 +101,8 @@ func (s *scene) buildWallSurface() {
 }
 
 func (s *scene) loadImages() {
-	for i := w1; i <= w24; i++ {
-		img, _, err := image.Decode(bytes.NewReader(pacimages.WallImages[i]))
-		handleError(err)
-		s.images[i], err = ebiten.NewImageFromImage(img, ebiten.FilterDefault)
-		handleError(err)
+	for i := w0; i <= w24; i++ {
+		s.images[i] = loadImage(pacimages.WallImages[i])
 	}
-
-	img, _, err := image.Decode(bytes.NewBuffer(pacimages.Background_png))
-	handleError(err)
-	s.images[backgroundElem], err = ebiten.NewImageFromImage(img, ebiten.FilterDefault)
-	handleError(err)
+	s.images[backgroundElem] = loadImage(pacimages.Background_png)
 }
