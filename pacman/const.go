@@ -44,7 +44,6 @@ const (
 	clydeElem  // u
 	inkyElem   // v
 	pinkyElem  // w
-	fruitElem  // x
 	backgroundElem
 )
 

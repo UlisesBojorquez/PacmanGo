@@ -44,7 +44,8 @@ func (s *scene) update(screen *ebiten.Image, in input) error {
 	if ebiten.IsDrawingSkipped() { // when IsDrawingSkipped is true, the rendered result is not adopted.
 		return nil
 	}
-	s.player.move(s.matrix, in) //player movement
+	s.player.move(s.matrix, in)                    //player movement
+	s.ghostManager.move(s.matrix, s.player.curPos) //the ghost movement
 	screen.Clear()
 	screen.DrawImage(s.wallSurface, nil)
 	s.dotManager.draw(screen)                            //paint the dots on screen

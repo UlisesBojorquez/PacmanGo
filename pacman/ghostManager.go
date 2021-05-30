@@ -46,3 +46,21 @@ func loadGhostImages(g [8][]byte) [8]*ebiten.Image {
 	copy(arr[:], loadImages(g[:]))
 	return arr
 }
+
+func (gm *ghostManager) move(m [][]elem, pp pos) {
+	for i := 0; i < len(gm.ghosts); i++ {
+		g := gm.ghosts[i]
+		if !g.isMoving() {
+			g.findNextMove(m, pp)
+		}
+		g.move()
+	}
+
+}
+
+func (g *ghost) endMove() {
+	g.prevPos = g.curPos
+	g.curPos = g.nextPos
+	g.stepsLength = pos{0, 0}
+	g.steps = 0
+}

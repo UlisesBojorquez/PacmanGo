@@ -18,7 +18,7 @@ var stage1 = stage{
 		"grrrror39v75rorrrrg",
 		"gr39rrrguwtgrrr75rg",
 		"grgrr6rl888nr6rrgrg",
-		"gror7nrrrxrrrl9rorg",
+		"gror7nrrrrrrrl9rorg",
 		"grrrrrr6r6r6rrrrrrg",
 		"gr012r3nrorl5r012rg",
 		"grijkrorrprrorijkrg",
