@@ -10,10 +10,12 @@ import (
 )
 
 type scene struct {
-	matrix      [][]elem //matrix state
-	wallSurface *ebiten.Image
-	images      map[elem]*ebiten.Image
-	stage       *stage //this is the map walls array
+	matrix        [][]elem //matrix stage
+	wallSurface   *ebiten.Image
+	images        map[elem]*ebiten.Image
+	stage         *stage //this is the map walls array
+	dotManager    *dotManager
+	bigDotManager *bigDotManager
 }
 
 //Create a new Scene
@@ -24,6 +26,8 @@ func newScene(st *stage) *scene {
 		s.stage = defaultStage //we assign the default stage for walls from stage.go
 	}
 	s.images = make(map[elem]*ebiten.Image) //we create the map from images
+	s.dotManager = newDotManager()          //initialice the dot
+	s.bigDotManager = newBigDotManager()    //initialice the bigdot
 	s.loadImages()                          //initialice the image attribute
 	s.createStage()                         //initialice matrix of elems
 	s.buildWallSurface()                    //initialice wall surface, paint it
@@ -38,6 +42,8 @@ func (s *scene) update(screen *ebiten.Image) error {
 	}
 	screen.Clear()
 	screen.DrawImage(s.wallSurface, nil)
+	s.dotManager.draw(screen)    //paint the dots on screen
+	s.bigDotManager.draw(screen) //paint the bigdots on screen
 	//ebitenutil.DebugPrint(screen, "Hello World") // show in the screen what we see
 	return nil
 }
@@ -58,14 +64,23 @@ func (s *scene) createStage() {
 	for i := 0; i < h; i++ {
 		s.matrix[i] = make([]elem, w)
 		for j := 0; j < w; j++ {
+			/*PART FOR THE BORDERS*/
 			c := s.stage.matrix[i][j] - '0' //here we get the decimal representation for example char 3 is 51 in decimal and 0 is 58 as a result we have 3
 			if c <= 9 {                     //used for numebers
 				s.matrix[i][j] = elem(c)
 			} else { //the rest of our constans
 				s.matrix[i][j] = elem(s.stage.matrix[i][j] - 'a' + 10) //for example for 10 is char a is 97 in decimal minus char a which is 97 +10 give is 10
 			}
+			/*PART TO ADD THE DOTS*/
+			switch s.matrix[i][j] {
+			case dotElem:
+				s.dotManager.add(i, j)
+			case bigDotElem:
+				s.bigDotManager.add(i, j)
+			}
 		}
 	}
+
 }
 
 func (s *scene) buildWallSurface() {

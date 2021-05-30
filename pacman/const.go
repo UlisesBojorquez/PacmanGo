@@ -3,8 +3,8 @@ package pacman
 const (
 	backgroundImageSize = 100
 	screenWidth         = backgroundImageSize * 7
-	screenHeight        = backgroundElem * 7
-	stageBlocSize       = 32 //size if the image 32x32
+	screenHeight        = backgroundImageSize * 7 //backgroundElem
+	stageBlocSize       = 32                      //size if the image 32x32
 )
 
 type elem int
