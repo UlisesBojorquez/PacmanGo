@@ -49,3 +49,20 @@ func (b *bigDotManager) draw(sc *ebiten.Image) {
 		sc.DrawImage(img, op)
 	}
 }
+
+/*COLLISION*/
+func (b *bigDotManager) detectCollision(m [][]elem, p pos, cb func()) {
+	if m[p.y][p.x] == bigDotElem {
+		cb()
+	}
+}
+
+func (b *bigDotManager) delete(p pos) {
+	for e := b.dots.Front(); e != nil; e = e.Next() {
+		v := e.Value.(pos)
+		if v.x == p.x && v.y == p.y {
+			b.dots.Remove(e)
+			return
+		}
+	}
+}

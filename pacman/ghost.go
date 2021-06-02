@@ -8,16 +8,20 @@ import (
 )
 
 type ghost struct {
-	kind        elem
-	currentImg  int
-	curPos      pos
-	nextPos     pos
-	prevPos     pos
-	speed       int
-	stepsLength pos
-	steps       int
-	direction   input
-	vision      int
+	kind           elem
+	currentImg     int
+	curPos         pos
+	nextPos        pos
+	prevPos        pos
+	speed          int
+	stepsLength    pos
+	steps          int
+	direction      input
+	vision         int
+	ctVulnerable   int
+	vulnerableMove bool
+	initialPos     pos
+	eaten          bool
 }
 
 func newGhost(y, x int, k elem) *ghost {
@@ -29,11 +33,20 @@ func newGhost(y, x int, k elem) *ghost {
 		stepsLength: pos{},
 		speed:       4,
 		vision:      getVision(k),
+		initialPos:  pos{y, x},
 	}
 }
 
 //return the actual image ghost
 func (g *ghost) image(imgs []*ebiten.Image) *ebiten.Image {
+
+	if g.isVulnerable() {
+		i := g.currentImg + 8
+		if i >= len(imgs) {
+			i = 8
+		}
+		return imgs[i]
+	}
 	return imgs[g.currentImg]
 }
 
@@ -44,6 +57,12 @@ func (g *ghost) draw(screen *ebiten.Image, imgs []*ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(x, y)
 	screen.DrawImage(g.image(imgs), op)
+}
+
+func (g *ghost) screenPos() (y, x float64) {
+	x = float64(g.curPos.x*stageBlocSize + g.stepsLength.x)
+	y = float64(g.curPos.y*stageBlocSize + g.stepsLength.y)
+	return
 }
 
 /*MOVEMENT PART*/
@@ -68,12 +87,41 @@ func (g *ghost) move() {
 	}
 	g.steps++
 
+	if g.vulnerableMove {
+		g.ctVulnerable++
+		if g.steps == 16 {
+			g.endMove()
+			if g.ctVulnerable >= 392 { //seconds 392/60 = 7seconds aprox
+				g.endVulnerability()
+			}
+		}
+		return
+	}
+
 	if g.steps == 8 {
 		g.endMove()
 	}
 }
 
 func (g *ghost) updateImage() {
+
+	if g.isVulnerable() {
+		if g.ctVulnerable <= 310 {
+			if g.currentImg == 0 {
+				g.currentImg = 1
+			} else {
+				g.currentImg = 0
+			}
+		} else {
+			if g.currentImg == 2 {
+				g.currentImg = 3
+			} else {
+				g.currentImg = 2
+			}
+		}
+		return
+	}
+
 	switch g.direction {
 	case up:
 		if g.currentImg == 6 {
@@ -103,6 +151,13 @@ func (g *ghost) updateImage() {
 }
 
 func (g *ghost) findNextMove(m [][]elem, pac pos) {
+
+	if g.isVulnerable() {
+		g.vulnerableMove = true
+		g.speed = 2
+	} else {
+		g.speed = 4
+	}
 
 	switch g.localisePlayer(m, pac) {
 	case up:
@@ -198,4 +253,39 @@ func (g *ghost) isMoving() bool {
 		return true
 	}
 	return false
+}
+
+func (g *ghost) isVulnerable() bool {
+	if g.ctVulnerable > 0 {
+		return true
+	}
+	return false
+}
+
+func (g *ghost) endVulnerability() {
+	g.vulnerableMove = false
+	g.ctVulnerable = 0
+	g.eaten = false
+}
+
+/*COLLISION*/
+func (g *ghost) makeVulnerable() {
+	g.ctVulnerable = 1
+
+}
+
+func (g *ghost) resetGhost() {
+	g.prevPos, g.curPos, g.nextPos = g.initialPos, g.initialPos, g.initialPos
+	g.stepsLength = pos{}
+	g.currentImg = 0
+	g.direction = 0
+	g.steps = 0
+}
+
+func (g *ghost) makeEaten() {
+	g.eaten = true
+}
+
+func (g *ghost) isEaten() bool {
+	return g.eaten
 }

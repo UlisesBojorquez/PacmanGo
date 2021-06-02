@@ -38,3 +38,20 @@ func (d *dotManager) draw(sc *ebiten.Image) {
 func (d *dotManager) add(y, x int) {
 	d.dots.PushBack(pos{y, x})
 }
+
+/*COLLISION*/
+func (d *dotManager) delete(p pos) {
+	for e := d.dots.Front(); e != nil; e = e.Next() {
+		v := e.Value.(pos)
+		if v.x == p.x && v.y == p.y {
+			d.dots.Remove(e)
+			return
+		}
+	}
+}
+
+func (d *dotManager) detectCollision(m [][]elem, p pos, cb func()) {
+	if m[p.y][p.x] == dotElem {
+		cb()
+	}
+}

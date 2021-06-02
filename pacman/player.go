@@ -15,6 +15,10 @@ type player struct {
 	stepsLength pos
 	steps       int //each step the player does increment it
 	direction   input
+	score       int
+	lost        bool
+	initialPos  pos
+	lives       int
 }
 
 func newPlayer(y, x int) *player {
@@ -23,6 +27,8 @@ func newPlayer(y, x int) *player {
 	p.curPos = pos{y, x}
 	p.prevPos = pos{y, x}
 	p.nextPos = pos{y, x}
+	p.initialPos = pos{y, x}
+	p.lives = 3
 	return p
 }
 
@@ -35,6 +41,11 @@ func (p *player) image() *ebiten.Image {
 }
 
 func (p *player) draw(screen *ebiten.Image) {
+
+	/*if p.lost {
+		return
+	}*/
+
 	x := float64(p.curPos.x*stageBlocSize + p.stepsLength.x)
 	y := float64(p.curPos.y*stageBlocSize + p.stepsLength.y)
 	op := &ebiten.DrawImageOptions{}
@@ -43,6 +54,11 @@ func (p *player) draw(screen *ebiten.Image) {
 }
 
 func (p *player) move(m [][]elem, direction input) {
+
+	if p.lost {
+		//p.resetPlayer()
+	}
+
 	//no move and no direction
 	if !p.isMoving() && direction == 0 {
 		return
@@ -132,6 +148,20 @@ func (p *player) updateDirection(d input) {
 
 func (p *player) endMove() {
 	p.curPos = p.nextPos
+	p.stepsLength = pos{0, 0}
+	p.steps = 0
+}
+
+func (p *player) screenPos() (y, x float64) {
+	x = float64(p.curPos.x*stageBlocSize + p.stepsLength.x)
+	y = float64(p.curPos.y*stageBlocSize + p.stepsLength.y)
+	return
+}
+
+func (p *player) resetPlayer() {
+	p.curPos, p.prevPos, p.nextPos = p.initialPos, p.initialPos, p.initialPos
+	p.currentImg = 0
+	p.lost = false
 	p.stepsLength = pos{0, 0}
 	p.steps = 0
 }

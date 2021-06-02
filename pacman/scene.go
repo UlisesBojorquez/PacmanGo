@@ -39,20 +39,29 @@ func newScene(st *stage) *scene {
 	return s //return the pointer structure scene
 }
 
+func (s *scene) move(in input) {
+	s.player.move(s.matrix, in)                    //player movement
+	s.ghostManager.move(s.matrix, s.player.curPos) //the ghost movement
+}
+
 //it works to show things in the screen
 func (s *scene) update(screen *ebiten.Image, in input) error {
 	if ebiten.IsDrawingSkipped() { // when IsDrawingSkipped is true, the rendered result is not adopted.
 		return nil
 	}
-	s.player.move(s.matrix, in)                    //player movement
-	s.ghostManager.move(s.matrix, s.player.curPos) //the ghost movement
+
+	s.move(in) //movement
+
+	s.detectCollision()
+
 	screen.Clear()
+
 	screen.DrawImage(s.wallSurface, nil)
-	s.dotManager.draw(screen)                            //paint the dots on screen
-	s.bigDotManager.draw(screen)                         //paint the bigdots on screen
-	s.player.draw(screen)                                //paint the player
-	s.ghostManager.draw(screen)                          //paint the ghosts
-	s.textManager.draw(screen, 0, 1, s.player.images[1]) //paint the text
+	s.dotManager.draw(screen)                                                      //paint the dots on screen
+	s.bigDotManager.draw(screen)                                                   //paint the bigdots on screen
+	s.player.draw(screen)                                                          //paint the player
+	s.ghostManager.draw(screen)                                                    //paint the ghosts
+	s.textManager.draw(screen, s.player.score, s.player.lives, s.player.images[1]) //paint the text
 	//ebitenutil.DebugPrint(screen, "Hello World") // show in the screen what we see
 	return nil
 }
@@ -142,4 +151,67 @@ func (s *scene) loadImages() {
 		s.images[i] = loadImage(pacimages.WallImages[i])
 	}
 	s.images[backgroundElem] = loadImage(pacimages.Background_png)
+}
+
+/*COLLISION*/
+
+func (s *scene) detectCollision() {
+	//detect the collision between pacman and dot
+	s.dotManager.detectCollision(s.matrix, s.player.curPos, s.afterPacmanDotCollision)
+	//detect collision between pacman and bid dots
+	s.bigDotManager.detectCollision(s.matrix, s.player.curPos, s.afterPacmanBigDotCollision)
+	//detect colission between pacman and ghosts
+	yPosPlayer, xPosPlayer := s.player.screenPos()
+	s.ghostManager.detectCollision(yPosPlayer, xPosPlayer, s.afterPacmanGhostCollision)
+
+}
+
+func (s *scene) afterPacmanDotCollision() {
+	s.player.score += 10
+	s.dotManager.delete(s.player.curPos)
+	s.matrix[s.player.curPos.y][s.player.curPos.x] = empty
+}
+
+func (s *scene) afterPacmanBigDotCollision() {
+	s.player.score += 50
+	s.bigDotManager.delete(s.player.curPos)
+	s.matrix[s.player.curPos.y][s.player.curPos.x] = empty
+	s.ghostManager.makeVulnerable()
+}
+
+func (s *scene) afterPacmanGhostCollision(vulnerable bool, y, x float64) {
+	if vulnerable {
+		//s.sounds.playEeatGhost()
+		eaten := s.ghostManager.eaten
+		if eaten == 1 {
+			s.player.score += 200
+		} else if eaten == 2 {
+			s.player.score += 400
+		} else if eaten == 3 {
+			s.player.score += 800
+		} else {
+			s.player.score += 1600
+		}
+
+	} else {
+		if s.player.lives > 1 {
+			s.player.lives--
+			s.player.resetPlayer()
+			s.ghostManager.resetGhostManager()
+		} else {
+			s.player.lives--
+			s.GameOver()
+		}
+
+	}
+}
+
+func (s *scene) GameOver() {
+
+	//s.player.resetPlayer()
+	//s.ghostManager.resetGhostManager()
+	/*s.player.lost = true
+	s.player.curPos.x = 0
+	s.player.curPos.y = 0*/
+
 }

@@ -1,6 +1,8 @@
 package pacman
 
 import (
+	"math"
+
 	pacimages "github.com/UlisesBojorquez/PacmanGo/images"
 	"github.com/hajimehoshi/ebiten"
 )
@@ -9,6 +11,7 @@ type ghostManager struct {
 	ghosts              []*ghost
 	images              map[elem][8]*ebiten.Image
 	vulnerabilityImages [5]*ebiten.Image
+	eaten               int //number of ghost eaten
 }
 
 func newGhostManager() *ghostManager {
@@ -63,4 +66,37 @@ func (g *ghost) endMove() {
 	g.curPos = g.nextPos
 	g.stepsLength = pos{0, 0}
 	g.steps = 0
+}
+
+/*COLLISION*/
+func (gm *ghostManager) makeVulnerable() {
+	gm.eaten = 0
+	for i := 0; i < len(gm.ghosts); i++ {
+		gm.ghosts[i].makeVulnerable()
+	}
+}
+
+func (gm *ghostManager) detectCollision(yPosPlayer, xPosPlayer float64, cb func(bool, float64, float64)) {
+	for i := 0; i < len(gm.ghosts); i++ {
+		g := gm.ghosts[i]
+		yPosGhost, xPosGhost := g.screenPos()
+		if math.Abs(yPosPlayer-yPosGhost) < 32 && math.Abs(xPosPlayer-xPosGhost) < 32 {
+			if !g.isVulnerable() {
+				cb(false, 0, 0)
+				return
+			}
+			gm.eaten++
+			g.makeEaten()
+			g.resetGhost()
+			cb(true, yPosGhost, xPosGhost)
+		}
+	}
+}
+
+func (gm *ghostManager) resetGhostManager() {
+	for i := 0; i < len(gm.ghosts); i++ {
+		g := gm.ghosts[i]
+		g.resetGhost()
+
+	}
 }
