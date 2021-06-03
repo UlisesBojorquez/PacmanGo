@@ -93,10 +93,22 @@ func (gm *ghostManager) detectCollision(yPosPlayer, xPosPlayer float64, cb func(
 	}
 }
 
-func (gm *ghostManager) resetGhostManager() {
+func (gm *ghostManager) resetGhostManager(won bool) {
 	for i := 0; i < len(gm.ghosts); i++ {
 		g := gm.ghosts[i]
-		g.resetGhost()
+		if !won {
+			g.resetGhost()
+		} else {
+			g.killGhost()
+		}
 
+	}
+}
+
+/*REINIT*/
+func (gm *ghostManager) reinit() {
+	for i := 0; i < len(gm.ghosts); i++ {
+		g := gm.ghosts[i]
+		g.reinit()
 	}
 }

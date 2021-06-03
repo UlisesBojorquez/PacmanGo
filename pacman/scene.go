@@ -16,7 +16,8 @@ type scene struct {
 	player        *player
 	ghostManager  *ghostManager
 	textManager   *textManager
-	//sounds        *sounds
+	sounds        *sounds
+	over          bool
 }
 
 //Create a new Scene
@@ -30,6 +31,7 @@ func newScene(st *stage) *scene {
 	s.dotManager = newDotManager()          //initialice the dot
 	s.bigDotManager = newBigDotManager()    //initialice the bigdot
 	s.ghostManager = newGhostManager()      //initialice the ghostmanager
+	s.sounds = newSounds()
 	h := len(s.stage.matrix)
 	w := len(s.stage.matrix[0])
 	s.textManager = newTextManager(w*stageBlocSize, h*stageBlocSize) //initilice the textmanager
@@ -37,12 +39,19 @@ func newScene(st *stage) *scene {
 	s.createStage()                                                  //initialice matrix of elems
 	s.buildWallSurface()                                             //initialice wall surface, paint it
 
+	s.textManager.entranceAnimation(true)
+	s.sounds.playEntrance()
 	return s //return the pointer structure scene
 }
 
 func (s *scene) move(in input) {
-	s.player.move(s.matrix, in)                    //player movement
-	s.ghostManager.move(s.matrix, s.player.curPos) //the ghost movement
+	if s.player.lives > 0 {
+		s.player.move(s.matrix, in) //player movement
+	}
+	if !s.over {
+		s.ghostManager.move(s.matrix, s.player.curPos) //the ghost movement
+	}
+
 }
 
 //it works to show things in the screen
@@ -51,19 +60,22 @@ func (s *scene) update(screen *ebiten.Image, in input) error {
 		return nil
 	}
 
-	s.move(in) //movement
-
-	s.detectCollision()
+	if in == rKey && !s.player.won {
+		s.reinit()
+	} else if !s.textManager.entrance {
+		s.move(in) //movement
+		s.detectCollision()
+	}
 
 	screen.Clear()
 
 	screen.DrawImage(s.wallSurface, nil)
-	s.dotManager.draw(screen)                                                      //paint the dots on screen
-	s.bigDotManager.draw(screen)                                                   //paint the bigdots on screen
-	s.player.draw(screen)                                                          //paint the player
-	s.ghostManager.draw(screen)                                                    //paint the ghosts
-	s.textManager.draw(screen, s.player.score, s.player.lives, s.player.images[1]) //paint the text
-	//ebitenutil.DebugPrint(screen, "Hello World") // show in the screen what we see
+	s.dotManager.draw(screen)                                                //paint the dots on screen
+	s.bigDotManager.draw(screen)                                             //paint the bigdots on screen
+	s.player.draw(screen)                                                    //paint the player
+	s.ghostManager.draw(screen)                                              //paint the ghosts
+	s.textManager.draw(screen, s.player.score, s.player.lives, s.player.won) //paint the text
+	s.sounds.playSiren()
 	return nil
 }
 
@@ -171,18 +183,25 @@ func (s *scene) afterPacmanDotCollision() {
 	s.player.score += 10
 	s.dotManager.delete(s.player.curPos)
 	s.matrix[s.player.curPos.y][s.player.curPos.x] = empty
+	if !s.over && s.won() {
+		s.victory()
+	}
 }
 
 func (s *scene) afterPacmanBigDotCollision() {
 	s.player.score += 50
 	s.bigDotManager.delete(s.player.curPos)
 	s.matrix[s.player.curPos.y][s.player.curPos.x] = empty
+	if !s.over && s.won() {
+		s.victory()
+		return
+	}
 	s.ghostManager.makeVulnerable()
+	s.sounds.playWail()
 }
 
 func (s *scene) afterPacmanGhostCollision(vulnerable bool, y, x float64) {
 	if vulnerable {
-		//s.sounds.playEeatGhost()
 		eaten := s.ghostManager.eaten
 		if eaten == 1 {
 			s.player.score += 200
@@ -193,26 +212,55 @@ func (s *scene) afterPacmanGhostCollision(vulnerable bool, y, x float64) {
 		} else {
 			s.player.score += 1600
 		}
+		s.sounds.playEeatGhost()
 
 	} else {
 		if s.player.lives > 1 {
 			s.player.lives--
 			s.player.resetPlayer()
-			s.ghostManager.resetGhostManager()
+			s.ghostManager.resetGhostManager(false)
+			s.sounds.playDeath()
 		} else {
-			s.player.lives--
-			s.GameOver()
+			if !s.player.lost {
+				s.GameOver()
+			}
 		}
 
 	}
 }
 
+/*GAMEOVER*/
 func (s *scene) GameOver() {
-
-	//s.player.resetPlayer()
-	//s.ghostManager.resetGhostManager()
-	/*s.player.lost = true
+	s.player.lives--
+	s.player.lost = true
 	s.player.curPos.x = 0
-	s.player.curPos.y = 0*/
+	s.player.curPos.y = 0
+	s.sounds.playDeath()
+}
 
+func (s *scene) won() bool {
+	if s.dotManager.empty() && s.bigDotManager.empty() {
+		return true
+	}
+	return false
+}
+func (s *scene) victory() {
+	s.over = true
+	s.player.won = true
+	s.ghostManager.resetGhostManager(true)
+	s.sounds.pause()
+	s.sounds.playApplause()
+}
+
+/*REINIT*/
+func (s *scene) reinit() {
+	s.dotManager.reinit(s.matrix)
+	s.bigDotManager.reinit(s.matrix)
+	s.player.reinit()
+	s.textManager.reinit()
+	s.over = false
+	s.ghostManager.reinit()
+	s.textManager.entranceAnimation(true)
+	s.sounds.pause()
+	s.sounds.playEntrance()
 }

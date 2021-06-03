@@ -19,6 +19,9 @@ func keyPressed() input {
 	if inpututil.KeyPressDuration(ebiten.KeyDown) > 0 || inpututil.KeyPressDuration(ebiten.KeyS) > 0 {
 		return down
 	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
+		return rKey
+	}
 
 	return 0
 }

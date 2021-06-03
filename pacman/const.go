@@ -56,4 +56,5 @@ const (
 	right
 	down
 	left
+	rKey
 )

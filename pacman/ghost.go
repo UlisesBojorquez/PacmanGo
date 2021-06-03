@@ -22,6 +22,7 @@ type ghost struct {
 	vulnerableMove bool
 	initialPos     pos
 	eaten          bool
+	killed         bool
 }
 
 func newGhost(y, x int, k elem) *ghost {
@@ -52,6 +53,10 @@ func (g *ghost) image(imgs []*ebiten.Image) *ebiten.Image {
 
 //draw the ghost
 func (g *ghost) draw(screen *ebiten.Image, imgs []*ebiten.Image) {
+	if g.killed {
+		return
+	}
+
 	x := float64(g.curPos.x*stageBlocSize + g.stepsLength.x)
 	y := float64(g.curPos.y*stageBlocSize + g.stepsLength.y)
 	op := &ebiten.DrawImageOptions{}
@@ -71,35 +76,37 @@ func init() {
 }
 
 func (g *ghost) move() {
-	switch g.direction {
-	case up:
-		g.stepsLength.y -= g.speed
-	case right:
-		g.stepsLength.x += g.speed
-	case down:
-		g.stepsLength.y += g.speed
-	case left:
-		g.stepsLength.x -= g.speed
-	}
-
-	if g.steps%4 == 0 {
-		g.updateImage()
-	}
-	g.steps++
-
-	if g.vulnerableMove {
-		g.ctVulnerable++
-		if g.steps == 16 {
-			g.endMove()
-			if g.ctVulnerable >= 392 { //seconds 392/60 = 7seconds aprox
-				g.endVulnerability()
-			}
+	if !g.killed {
+		switch g.direction {
+		case up:
+			g.stepsLength.y -= g.speed
+		case right:
+			g.stepsLength.x += g.speed
+		case down:
+			g.stepsLength.y += g.speed
+		case left:
+			g.stepsLength.x -= g.speed
 		}
-		return
-	}
 
-	if g.steps == 8 {
-		g.endMove()
+		if g.steps%4 == 0 {
+			g.updateImage()
+		}
+		g.steps++
+
+		if g.vulnerableMove {
+			g.ctVulnerable++
+			if g.steps == 16 {
+				g.endMove()
+				if g.ctVulnerable >= 392 { //seconds 392/60 = 7seconds aprox
+					g.endVulnerability()
+				}
+			}
+			return
+		}
+
+		if g.steps == 8 {
+			g.endMove()
+		}
 	}
 }
 
@@ -288,4 +295,17 @@ func (g *ghost) makeEaten() {
 
 func (g *ghost) isEaten() bool {
 	return g.eaten
+}
+
+func (g *ghost) reinit() {
+	g.resetGhost()
+	g.killed = false
+	g.speed = 4
+	g.endVulnerability()
+}
+
+func (g *ghost) killGhost() {
+	p := pos{0, 0}
+	g.prevPos, g.curPos, g.nextPos = p, p, p
+	g.killed = true
 }

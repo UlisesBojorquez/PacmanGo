@@ -17,6 +17,7 @@ type player struct {
 	direction   input
 	score       int
 	lost        bool
+	won         bool
 	initialPos  pos
 	lives       int
 }
@@ -42,9 +43,9 @@ func (p *player) image() *ebiten.Image {
 
 func (p *player) draw(screen *ebiten.Image) {
 
-	/*if p.lost {
+	if p.lost {
 		return
-	}*/
+	}
 
 	x := float64(p.curPos.x*stageBlocSize + p.stepsLength.x)
 	y := float64(p.curPos.y*stageBlocSize + p.stepsLength.y)
@@ -54,10 +55,6 @@ func (p *player) draw(screen *ebiten.Image) {
 }
 
 func (p *player) move(m [][]elem, direction input) {
-
-	if p.lost {
-		//p.resetPlayer()
-	}
 
 	//no move and no direction
 	if !p.isMoving() && direction == 0 {
@@ -164,4 +161,12 @@ func (p *player) resetPlayer() {
 	p.lost = false
 	p.stepsLength = pos{0, 0}
 	p.steps = 0
+}
+
+/*REINIT*/
+func (p *player) reinit() {
+	p.lives = 3
+	p.score = 0
+	p.resetPlayer()
+	p.won = false
 }
