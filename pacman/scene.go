@@ -16,6 +16,7 @@ type scene struct {
 	player        *player
 	ghostManager  *ghostManager
 	textManager   *textManager
+	//sounds        *sounds
 }
 
 //Create a new Scene
