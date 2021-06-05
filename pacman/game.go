@@ -1,6 +1,8 @@
 package pacman
 
-import "github.com/hajimehoshi/ebiten"
+import (
+	"github.com/hajimehoshi/ebiten"
+)
 
 // Game holds all the pacman game data
 type Game struct {
@@ -14,9 +16,9 @@ type pos struct {
 }
 
 // NewGame is a Game constructor
-func NewGame() *Game {
+func NewGame(enemies int) *Game {
 	g := &Game{}
-	g.scene = newScene(nil) //create an empty scene
+	g.scene = newScene(nil, enemies) //create an empty scene
 
 	return g
 }
