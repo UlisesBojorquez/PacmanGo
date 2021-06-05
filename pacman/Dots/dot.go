@@ -1,4 +1,4 @@
-package pacman
+package Dots
 
 import (
 	"container/list"

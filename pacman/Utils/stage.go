@@ -1,4 +1,4 @@
-package pacman
+package Utils
 
 type stage struct {
 	matrix []string

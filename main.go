@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/UlisesBojorquez/PacmanGo/pacman"
+	pacman "github.com/UlisesBojorquez/PacmanGo/pacman/Principal"
 	"github.com/hajimehoshi/ebiten"
 )
 

@@ -1,4 +1,4 @@
-package pacman
+package Managers
 
 import (
 	"image/color"

@@ -1,4 +1,4 @@
-package pacman
+package Principal
 
 import (
 	"image/color"

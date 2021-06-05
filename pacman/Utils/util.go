@@ -1,4 +1,4 @@
-package pacman
+package Utils
 
 import (
 	"bytes"
