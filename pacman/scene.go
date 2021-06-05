@@ -1,10 +1,10 @@
-package Principal
+package pacman
 
 import (
 	"github.com/hajimehoshi/ebiten"
 
 	pacimages "github.com/UlisesBojorquez/PacmanGo/images"
-	"github.com/UlisesBojorquez/PacmanGo/pacman/Utils"
+	"github.com/UlisesBojorquez/PacmanGo/tree/main/pacman/Utils"
 	"github.com/UlisesBojorquez/PacmanGo/pacman/Entities"
 	"github.com/UlisesBojorquez/PacmanGo/pacman/Inputs"
 	"github.com/UlisesBojorquez/PacmanGo/pacman/Managers"

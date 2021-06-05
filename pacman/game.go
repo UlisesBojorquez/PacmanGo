@@ -1,4 +1,4 @@
-package Principal
+package pacman
 
 import (
 	"github.com/hajimehoshi/ebiten"

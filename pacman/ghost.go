@@ -1,4 +1,4 @@
-package Entities
+package pacman
 
 import (
 	"math/rand"

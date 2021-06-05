@@ -1,4 +1,4 @@
-package Inputs
+package pacman
 
 import (
 	"github.com/hajimehoshi/ebiten"

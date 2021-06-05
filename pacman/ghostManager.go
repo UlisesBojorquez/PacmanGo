@@ -1,4 +1,4 @@
-package Managers
+package pacman
 
 import (
 	"math"

@@ -1,4 +1,4 @@
-package Entities
+package pacman
 
 import (
 	pacimages "github.com/UlisesBojorquez/PacmanGo/images"
