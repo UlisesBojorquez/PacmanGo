@@ -3,6 +3,9 @@
 ## Table of Content 📚
 - [Overview](#overview)
 - [Description](#description)
+- [Libraries](#libraries)
+- [Play](#play)
+- [Controls](#controls)
 - [Contributors](#contributors)
 
 ## Overview
@@ -22,7 +25,46 @@ Computer vs Human game. Each enemy is independent and the number of enemies is c
 - Pacman loses the game when it ran out of lifes.
 - Pacman wins the game when it has taken all coins in the map.
 
+## Libraries
+- For developing this project we decided to use the [Ebiten Library](https://ebiten.org/) a dead simple 2D game library for Go.
+- Ebiten is an open source game library for the Go programming language. Ebiten's simple API allows you to quickly and easily develop 2D games that can be deployed across multiple platforms.
+
+<p align="center"><img width=60% src="https://ebiten.org/images/overview2.1.png"></p>
+
+## Play
+
+- To play pacman just hit this make command!:
+
+```bash
+$ make pacman
+```
+> This command automatically buils and runs pacman for you!.
+> By default you will be playing against 4 enemies.
+<br />
+
+- To select the amount to enemies to play against, just specify the amount enemies you want:
+
+```bash
+$ make pacman enemies=2
+```
+> With this command you will be playing against 2 enemies.
+> **Note: The min number of enemies is 1, and max is 4**
+<br />
+
+## Controls
+* In order to play pacman, just follow this controls list:
+
+| Input                               | Output                           |
+|-------------------------------------|----------------------------------|
+|     Keyboard up-arrow, 'W' key      |     Moves pacman up              |
+|     Keyboard down-arrow, 'S' key    |     Moves pacman down            |
+|     Keyboard left-arrow, 'A' key    |     Moves pacman to the left     |
+|     Keyboard right-arrow, 'D' key   |     Moves pacman to the right    |
+|     Keyboard 'R' key                |     Restarts the game            |
+
+
 ## Contributors
+Pacman was made with ❤️ by:
 <table>
   <tr>
     <td align="center"><a href="https://github.com/SYM1000"><img src="https://avatars.githubusercontent.com/u/20364366?v=4" width="100px;" alt=""/><br /><sub><b>Santiago Yeomans</b></sub></a><br /></td>
