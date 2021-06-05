@@ -18,10 +18,11 @@ type scene struct {
 	textManager   *textManager
 	sounds        *sounds
 	over          bool
+	enemiesNumb   int //number of ghost desired by the player
 }
 
 //Create a new Scene
-func newScene(st *stage) *scene {
+func newScene(st *stage, enemies int) *scene {
 	s := &scene{} //create the structure pointer scene
 	s.stage = st
 	if s.stage == nil {
@@ -36,8 +37,9 @@ func newScene(st *stage) *scene {
 	w := len(s.stage.matrix[0])
 	s.textManager = newTextManager(w*stageBlocSize, h*stageBlocSize) //initilice the textmanager
 	s.loadImages()                                                   //initialice the image attribute
-	s.createStage()                                                  //initialice matrix of elems
+	s.createStage(enemies)                                           //initialice matrix of elems
 	s.buildWallSurface()                                             //initialice wall surface, paint it
+	s.enemiesNumb = enemies
 
 	s.textManager.entranceAnimation(true)
 	s.sounds.playEntrance()
@@ -91,7 +93,7 @@ func (s *scene) screenHeight() int {
 	return sizeH
 }
 
-func (s *scene) createStage() {
+func (s *scene) createStage(enemies int) {
 	h := len(s.stage.matrix)     //altura
 	w := len(s.stage.matrix[0])  //ancho
 	s.matrix = make([][]elem, h) //we create the matrix with the number of rows
@@ -105,6 +107,7 @@ func (s *scene) createStage() {
 			} else { //the rest of our constans
 				s.matrix[i][j] = elem(s.stage.matrix[i][j] - 'a' + 10) //for example for 10 is char a is 97 in decimal minus char a which is 97 +10 give is 10
 			}
+
 			/*PART TO ADD THE REST*/
 			switch s.matrix[i][j] {
 			case dotElem:
@@ -114,13 +117,21 @@ func (s *scene) createStage() {
 			case playerElem:
 				s.player = newPlayer(i, j)
 			case blinkyElem:
-				s.ghostManager.addGhost(i, j, blinkyElem)
+				if enemies >= 1 {
+					s.ghostManager.addGhost(i, j, blinkyElem)
+				}
 			case inkyElem:
-				s.ghostManager.addGhost(i, j, inkyElem)
+				if enemies >= 2 {
+					s.ghostManager.addGhost(i, j, inkyElem)
+				}
 			case pinkyElem:
-				s.ghostManager.addGhost(i, j, pinkyElem)
+				if enemies >= 3 {
+					s.ghostManager.addGhost(i, j, pinkyElem)
+				}
 			case clydeElem:
-				s.ghostManager.addGhost(i, j, clydeElem)
+				if enemies == 4 {
+					s.ghostManager.addGhost(i, j, clydeElem)
+				}
 			}
 		}
 	}
