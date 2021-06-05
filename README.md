@@ -6,6 +6,7 @@
 - [Libraries](#libraries)
 - [Play](#play)
 - [Controls](#controls)
+- [Architecture](#architecture)
 - [Contributors](#contributors)
 
 ## Overview
@@ -61,6 +62,10 @@ $ make pacman enemies=2
 |     Keyboard left-arrow, 'A' key    |     Moves pacman to the left     |
 |     Keyboard right-arrow, 'D' key   |     Moves pacman to the right    |
 |     Keyboard 'R' key                |     Restarts the game            |
+
+
+## Architecture
+Check the Architecure docuement [here](./ARCHITECTURE.md).
 
 
 ## Contributors
