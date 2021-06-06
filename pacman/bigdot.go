@@ -3,7 +3,7 @@ package pacman
 import (
 	"container/list"
 
-	pacimages "github.com/UlisesBojorquez/PacmanGo/images"
+	pacmanimages "github.com/UlisesBojorquez/PacmanGo/images"
 	"github.com/hajimehoshi/ebiten"
 )
 
@@ -22,10 +22,10 @@ func newBigDotManager() *bigDotManager {
 	return bd
 }
 
-//Load the two images from bigdot, there are two dots dou to animation
+//Load the two images from bigdot, there are two dots due to animation
 func (b *bigDotManager) loadImages() {
-	b.images[0] = loadImage(pacimages.BigDot1_png)
-	b.images[1] = loadImage(pacimages.BigDot2_png)
+	b.images[0] = loadImage(pacmanimages.BigDot1_png)
+	b.images[1] = loadImage(pacmanimages.BigDot2_png)
 }
 
 func (b *bigDotManager) add(y, x int) {

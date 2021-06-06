@@ -3,7 +3,7 @@ package pacman
 import (
 	"log"
 
-	pacsounds "github.com/UlisesBojorquez/PacmanGo/sounds"
+	pacmansounds "github.com/UlisesBojorquez/PacmanGo/sounds"
 	"github.com/hajimehoshi/ebiten/audio"
 	"github.com/hajimehoshi/ebiten/audio/wav"
 )
@@ -32,20 +32,28 @@ func newSounds() *sounds {
 		audioContext: audioContext,
 	}
 
-	s.sirenPlayer = s.newPlayer(pacsounds.Siren_wav)
-	s.wailPlayer = s.newPlayer(pacsounds.Wail_wav)
-	s.eatGhostPlayer = s.newPlayer(pacsounds.EatGhost_wav)
-	s.deathPlayer = s.newPlayer(pacsounds.Death_wav)
-	s.entrancePlayer = s.newPlayer(pacsounds.Beginning_wav)
-	s.applausePlayer = s.newPlayer(pacsounds.Applause_wav)
+	s.sirenPlayer = s.newPlayer(pacmansounds.Siren_wav)
+	s.wailPlayer = s.newPlayer(pacmansounds.Wail_wav)
+	s.eatGhostPlayer = s.newPlayer(pacmansounds.EatGhost_wav)
+	s.deathPlayer = s.newPlayer(pacmansounds.Death_wav)
+	s.entrancePlayer = s.newPlayer(pacmansounds.Beginning_wav)
+	s.applausePlayer = s.newPlayer(pacmansounds.Applause_wav)
 
-	s.toggleSound()
-
-	/*s.sirenPlayer.SetVolume(0.2)
-	s.wailPlayer.SetVolume(0.1)
-	s.eatGhostPlayer.SetVolume(0.1)
-	s.deathPlayer.SetVolume(0.2)*/
-
+	if s.on {
+		s.sirenPlayer.SetVolume(0)
+		s.wailPlayer.SetVolume(0)
+		s.eatGhostPlayer.SetVolume(0)
+		s.deathPlayer.SetVolume(0)
+		s.entrancePlayer.SetVolume(0)
+		s.applausePlayer.SetVolume(0)
+	} else {
+		s.sirenPlayer.SetVolume(0.2)
+		s.wailPlayer.SetVolume(0.05)
+		s.eatGhostPlayer.SetVolume(0.05)
+		s.deathPlayer.SetVolume(0.05)
+		s.entrancePlayer.SetVolume(0.2)
+		s.applausePlayer.SetVolume(0.2)
+	}
 	return s
 }
 
@@ -55,26 +63,6 @@ func (s *sounds) newPlayer(b []byte) *audio.Player {
 		log.Fatal(err)
 	}
 	return p
-}
-
-func (s *sounds) toggleSound() {
-	if s.on {
-		//s.on = false
-		s.sirenPlayer.SetVolume(0)
-		s.wailPlayer.SetVolume(0)
-		s.eatGhostPlayer.SetVolume(0)
-		s.deathPlayer.SetVolume(0)
-		s.entrancePlayer.SetVolume(0)
-		s.applausePlayer.SetVolume(0)
-	} else {
-		//s.on = true
-		s.sirenPlayer.SetVolume(0.2)
-		s.wailPlayer.SetVolume(0.05)
-		s.eatGhostPlayer.SetVolume(0.05)
-		s.deathPlayer.SetVolume(0.05)
-		s.entrancePlayer.SetVolume(0.2)
-		s.applausePlayer.SetVolume(0.2)
-	}
 }
 
 func (s *sounds) turnOff() {
@@ -93,8 +81,8 @@ func (s *sounds) load(b []byte) *wav.Stream {
 	return stream
 }
 
-func (s *sounds) playSiren( /*won bool*/ ) {
-	if /*!won &&*/ s.canPlaySiren() && !s.sirenPlayer.IsPlaying() {
+func (s *sounds) playSiren() {
+	if s.canPlaySiren() && !s.sirenPlayer.IsPlaying() {
 		s.sirenPlayer.Rewind()
 		s.sirenPlayer.Play()
 	}

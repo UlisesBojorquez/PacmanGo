@@ -3,7 +3,7 @@ package pacman
 import (
 	"container/list"
 
-	pacimages "github.com/UlisesBojorquez/PacmanGo/images"
+	pacmanimages "github.com/UlisesBojorquez/PacmanGo/images"
 	"github.com/hajimehoshi/ebiten"
 )
 
@@ -23,7 +23,7 @@ func newDotManager() *dotManager {
 }
 
 func (d *dotManager) loadImage() {
-	d.image = loadImage(pacimages.Dot_png)
+	d.image = loadImage(pacmanimages.Dot_png)
 }
 
 func (d *dotManager) draw(sc *ebiten.Image) {

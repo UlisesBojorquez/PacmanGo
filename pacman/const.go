@@ -2,9 +2,7 @@ package pacman
 
 const (
 	backgroundImageSize = 100
-	//screenWidth         = backgroundImageSize * 7
-	//screenHeight        = backgroundImageSize * 7 //backgroundElem
-	stageBlocSize = 32 //size if the image 32x32
+	stageBlocSize       = 32 //size if the image 32x32
 )
 
 /*USED FOR THE IMAGES*/
@@ -20,22 +18,22 @@ const (
 	w6
 	w7
 	w8
-	w9
-	w10 // a
-	w11
-	w12
-	w13
-	w14
-	w15
-	w16
-	w17
-	w18
-	w19
-	w20
-	w21
-	w22
-	w23
-	w24
+	w9         //ending of the walls
+	w10        // a
+	w11        // b
+	w12        // c
+	w13        // d
+	w14        // e
+	w15        // f
+	w16        // g
+	w17        // h
+	w18        // i
+	w19        // j
+	w20        // k
+	w21        // l
+	w22        // m
+	w23        // n
+	w24        // o
 	playerElem // p
 	bigDotElem // q
 	dotElem    // r

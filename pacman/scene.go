@@ -3,18 +3,18 @@ package pacman
 import (
 	"github.com/hajimehoshi/ebiten"
 
-	pacimages "github.com/UlisesBojorquez/PacmanGo/images"
+	pacmanimages "github.com/UlisesBojorquez/PacmanGo/images"
 )
 
 type scene struct {
 	matrix        [][]elem //matrix stage
 	wallSurface   *ebiten.Image
 	images        map[elem]*ebiten.Image
-	stage         *stage //this is the map walls array
-	dotManager    *dotManager
-	bigDotManager *bigDotManager
-	player        *player
-	ghostManager  *ghostManager
+	stage         *stage         //this is the map walls array
+	dotManager    *dotManager    //this is the dot manager
+	bigDotManager *bigDotManager //this is the big dot manager
+	player        *player        //this is the player
+	ghostManager  *ghostManager  //this is the ghost manager
 	textManager   *textManager
 	sounds        *sounds
 	over          bool
@@ -86,10 +86,8 @@ func (s *scene) screenWidth() int {
 	return w * stageBlocSize
 }
 func (s *scene) screenHeight() int {
-	//h := len(s.stage.matrix)
-	//return h * stageBlocSize
 	h := len(s.stage.matrix)
-	sizeH := ((h*stageBlocSize)/backgroundImageSize + 2) * backgroundImageSize
+	sizeH := ((h*stageBlocSize)/backgroundImageSize + 1) * backgroundImageSize
 	return sizeH
 }
 
@@ -143,7 +141,7 @@ func (s *scene) buildWallSurface() {
 	w := len(s.stage.matrix[0])
 
 	sizeW := ((w*stageBlocSize)/backgroundImageSize + 1) * backgroundImageSize
-	sizeH := ((h*stageBlocSize)/backgroundImageSize + 2) * backgroundImageSize
+	sizeH := ((h*stageBlocSize)/backgroundImageSize + 1) * backgroundImageSize
 	s.wallSurface, _ = ebiten.NewImage(sizeW, sizeH, ebiten.FilterDefault)
 
 	for i := 0; i < sizeH/backgroundImageSize; i++ {
@@ -172,9 +170,9 @@ func (s *scene) buildWallSurface() {
 
 func (s *scene) loadImages() {
 	for i := w0; i <= w24; i++ {
-		s.images[i] = loadImage(pacimages.WallImages[i])
+		s.images[i] = loadImage(pacmanimages.WallImages[i])
 	}
-	s.images[backgroundElem] = loadImage(pacimages.Background_png)
+	s.images[backgroundElem] = loadImage(pacmanimages.Background_png)
 }
 
 /*COLLISION*/

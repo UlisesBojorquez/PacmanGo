@@ -8,21 +8,16 @@ import (
 	"github.com/hajimehoshi/ebiten"
 
 	"github.com/UlisesBojorquez/PacmanGo/fonts"
-	pacimages "github.com/UlisesBojorquez/PacmanGo/images"
+	pacmanimages "github.com/UlisesBojorquez/PacmanGo/images"
 	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten/text"
 	"golang.org/x/image/font"
 )
 
 const (
-	keyText     = "KEYS"
-	rText       = "r: Restart"
-	hText       = "aswd: Move"
-	livesText   = "LIVES"
-	scoreText   = "SCORE"
-	restartText = "R: Restart"
-	moveText    = "←↓↑→: Move"
-	pauseText   = "P: pause"
+	keyText   = "KEYS"
+	livesText = "LIVES"
+	scoreText = "SCORE"
 )
 
 var (
@@ -32,17 +27,16 @@ var (
 )
 
 type textManager struct {
-	titleFF              font.Face
-	bodyFF               font.Face
-	entranceFF           font.Face
-	keyX, livesX, scoreX int
-	titleY               int
-	count                int
-	entrance             bool
-	gameOverImage        *ebiten.Image
-	gameOverAlpha        float64
-	winImage             *ebiten.Image
-	winAlpha             float64
+	titleFont      font.Face
+	entranceFF     font.Face
+	livesX, scoreX int
+	titleY         int
+	count          int
+	entrance       bool
+	gameOverImage  *ebiten.Image
+	gameOverAlpha  float64
+	winImage       *ebiten.Image
+	winAlpha       float64
 }
 
 func newTextManager(w, h int) *textManager {
@@ -52,36 +46,28 @@ func newTextManager(w, h int) *textManager {
 		log.Fatal(err)
 	}
 
-	tm.titleFF = truetype.NewFace(tt, &truetype.Options{
+	tm.titleFont = truetype.NewFace(tt, &truetype.Options{
 		Size: 24,
-	})
-	tm.bodyFF = truetype.NewFace(tt, &truetype.Options{
-		Size: 14,
 	})
 	tm.entranceFF = truetype.NewFace(tt, &truetype.Options{
 		Size: 70,
 	})
 
 	tm.scoreX = w - 5*stageBlocSize
-	tm.keyX = 20
-	tm.livesX = w/2 - 2*stageBlocSize
+	tm.livesX = stageBlocSize * 2
 	tm.titleY = h + 25
 
-	tm.gameOverImage = loadImage(pacimages.GameOver_png[:])
-	tm.winImage = loadImage(pacimages.Congrats_png[:])
+	tm.gameOverImage = loadImage(pacmanimages.GameOver_png[:])
+	tm.winImage = loadImage(pacmanimages.Congrats_png[:])
 	return tm
 }
 
 func (tm *textManager) draw(screen *ebiten.Image, score, lives int, won bool) {
 
-	text.Draw(screen, keyText, tm.titleFF, tm.keyX, tm.titleY, gold)
-	text.Draw(screen, rText, tm.bodyFF, tm.keyX, tm.titleY+stageBlocSize, gold)
-	text.Draw(screen, hText, tm.bodyFF, tm.keyX, tm.titleY+2*stageBlocSize, gold)
-	text.Draw(screen, moveText, tm.bodyFF, tm.keyX, tm.titleY+3*stageBlocSize, gold)
-	text.Draw(screen, livesText, tm.titleFF, tm.livesX, tm.titleY, gold)
-	text.Draw(screen, strconv.Itoa(lives), tm.titleFF, tm.livesX, tm.titleY+1*stageBlocSize-9, gold)
-	text.Draw(screen, scoreText, tm.titleFF, tm.scoreX, tm.titleY, gold)
-	text.Draw(screen, strconv.Itoa(score), tm.titleFF, tm.scoreX, tm.titleY+1*stageBlocSize-9, gold)
+	text.Draw(screen, livesText, tm.titleFont, tm.livesX, tm.titleY, gold)
+	text.Draw(screen, strconv.Itoa(lives), tm.titleFont, tm.livesX, tm.titleY+1*stageBlocSize-9, gold)
+	text.Draw(screen, scoreText, tm.titleFont, tm.scoreX, tm.titleY, gold)
+	text.Draw(screen, strconv.Itoa(score), tm.titleFont, tm.scoreX, tm.titleY+1*stageBlocSize-9, gold)
 
 	if lives == 0 {
 		tm.showGameOverImage(screen)
@@ -119,11 +105,6 @@ func (tm *textManager) showEntranceAnimation(screen *ebiten.Image) {
 	}
 }
 
-func (tm *textManager) reinit() {
-	tm.gameOverAlpha = 0
-	tm.winAlpha = 0
-}
-
 func (tm *textManager) showGameOverImage(screen *ebiten.Image) {
 	tm.gameOverAlpha += 0.01
 	if tm.gameOverAlpha > 1 {
@@ -148,4 +129,10 @@ func (tm *textManager) showWinImage(screen *ebiten.Image) {
 	op.GeoM.Translate(x, y)
 	op.ColorM.Scale(1, 1, 1, tm.winAlpha)
 	screen.DrawImage(tm.winImage, op)
+}
+
+/*REINIT*/
+func (tm *textManager) reinit() {
+	tm.gameOverAlpha = 0
+	tm.winAlpha = 0
 }

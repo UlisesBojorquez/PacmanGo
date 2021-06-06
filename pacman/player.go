@@ -1,7 +1,7 @@
 package pacman
 
 import (
-	pacimages "github.com/UlisesBojorquez/PacmanGo/images"
+	pacmanimages "github.com/UlisesBojorquez/PacmanGo/images"
 	"github.com/hajimehoshi/ebiten"
 )
 
@@ -34,7 +34,7 @@ func newPlayer(y, x int) *player {
 }
 
 func (p *player) loadImages() {
-	copy(p.images[:], loadImages(pacimages.PlayerImages[:]))
+	copy(p.images[:], loadImages(pacmanimages.PlayerImages[:]))
 }
 
 func (p *player) image() *ebiten.Image {
@@ -63,7 +63,7 @@ func (p *player) move(m [][]elem, direction input) {
 
 	//new direction
 	if !p.isMoving() && direction != 0 {
-		if !canMove(m, addPosDirection(direction, p.curPos)) {
+		if !canMove(m, addNextDirection(direction, p.curPos)) {
 			return
 		}
 		p.updateDirection(direction)
@@ -139,7 +139,7 @@ func (p *player) isMoving() bool {
 func (p *player) updateDirection(d input) {
 	p.stepsLength = pos{0, 0}
 	p.direction = d
-	p.nextPos = addPosDirection(d, p.curPos)
+	p.nextPos = addNextDirection(d, p.curPos)
 	p.prevPos = p.curPos
 }
 

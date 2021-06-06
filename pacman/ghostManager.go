@@ -3,7 +3,7 @@ package pacman
 import (
 	"math"
 
-	pacimages "github.com/UlisesBojorquez/PacmanGo/images"
+	pacmanimages "github.com/UlisesBojorquez/PacmanGo/images"
 	"github.com/hajimehoshi/ebiten"
 )
 
@@ -22,11 +22,11 @@ func newGhostManager() *ghostManager {
 }
 
 func (gm *ghostManager) loadImages() {
-	gm.images[blinkyElem] = loadGhostImages(pacimages.BlinkyImages)
-	gm.images[clydeElem] = loadGhostImages(pacimages.ClydeImages)
-	gm.images[inkyElem] = loadGhostImages(pacimages.InkyImages)
-	gm.images[pinkyElem] = loadGhostImages(pacimages.PinkyImages)
-	copy(gm.vulnerabilityImages[:], loadImages(pacimages.VulnerabilityImages[:]))
+	gm.images[blinkyElem] = loadGhostImages(pacmanimages.BlinkyImages)
+	gm.images[clydeElem] = loadGhostImages(pacmanimages.ClydeImages)
+	gm.images[inkyElem] = loadGhostImages(pacmanimages.InkyImages)
+	gm.images[pinkyElem] = loadGhostImages(pacmanimages.PinkyImages)
+	copy(gm.vulnerabilityImages[:], loadImages(pacmanimages.VulnerabilityImages[:]))
 }
 
 func (gm *ghostManager) addGhost(y, x int, e elem) {
@@ -112,6 +112,7 @@ func (gm *ghostManager) detectGhostCollision(yPosPlayer, xPosPlayer float64, cb 
 	}
 }
 
+//Check if the ghost still playing or the player has won
 func (gm *ghostManager) resetGhostManager(won bool) {
 	for i := 0; i < len(gm.ghosts); i++ {
 		g := gm.ghosts[i]

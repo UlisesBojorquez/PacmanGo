@@ -10,8 +10,6 @@ import (
 	"github.com/hajimehoshi/ebiten/text"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
-	//"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	//pacimages "github.com/kgosse/pacmanresources/images"
 )
 
 var logo *ebiten.Image

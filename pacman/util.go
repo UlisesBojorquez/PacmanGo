@@ -41,31 +41,31 @@ func canMove(m [][]elem, p pos) bool {
 	return !isWall(m[p.y][p.x])
 }
 
-func addPosDirection(d input, p pos) pos {
-	r := pos{p.y, p.x}
+func addNextDirection(d input, p pos) pos {
+	newPos := pos{p.y, p.x}
 
 	switch d {
 	case up:
-		r.y--
+		newPos.y--
 	case right:
-		r.x++
+		newPos.x++
 	case down:
-		r.y++
+		newPos.y++
 	case left:
-		r.x--
+		newPos.x--
 	}
 
-	if r.x < 0 {
-		r.x = 0
+	if newPos.x < 0 {
+		newPos.x = 0
 	}
-	if r.y < 0 {
-		r.y = 0
+	if newPos.y < 0 {
+		newPos.y = 0
 	}
 
-	return r
+	return newPos
 }
 
-func oppDir(d input) input {
+func oppDirection(d input) input {
 	switch d {
 	case up:
 		return down

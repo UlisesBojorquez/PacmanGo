@@ -5,7 +5,7 @@ type stage struct {
 }
 
 //Each string of the matrix is an equivalent to an image
-var stage1 = stage{
+var gameState = stage{
 	[]string{
 		"3888888884888888885",
 		"gqrrrrrrrgrrrrrrrqg",
@@ -27,4 +27,4 @@ var stage1 = stage{
 	},
 }
 
-var defaultStage = &stage1
+var defaultStage = &gameState

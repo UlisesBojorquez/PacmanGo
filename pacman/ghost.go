@@ -8,21 +8,21 @@ import (
 )
 
 type ghost struct {
-	kind           elem
-	currentImg     int
-	curPos         pos
-	nextPos        pos
-	prevPos        pos
-	speed          int
-	stepsLength    pos
-	steps          int
-	direction      input
-	vision         int
-	ctVulnerable   int
-	vulnerableMove bool
-	initialPos     pos
-	eaten          bool
-	killed         bool
+	kind               elem
+	currentImg         int
+	curPos             pos
+	nextPos            pos
+	prevPos            pos
+	speed              int
+	stepsLength        pos
+	steps              int
+	direction          input
+	vision             int
+	countVulnerability int
+	vulnerableMove     bool
+	initialPos         pos
+	eaten              bool
+	killed             bool
 }
 
 func newGhost(y, x int, k elem) *ghost {
@@ -94,10 +94,10 @@ func (g *ghost) move() {
 		g.steps++
 
 		if g.vulnerableMove {
-			g.ctVulnerable++
+			g.countVulnerability++
 			if g.steps == 16 {
 				g.endMove()
-				if g.ctVulnerable >= 392 { //seconds 392/60 = 7seconds aprox
+				if g.countVulnerability >= 392 { //seconds 392/60 = 7seconds aprox
 					g.endVulnerability()
 				}
 			}
@@ -110,10 +110,11 @@ func (g *ghost) move() {
 	}
 }
 
+/*UPDATING PART FORM THE IMAGES*/
 func (g *ghost) updateImage() {
 
 	if g.isVulnerable() {
-		if g.ctVulnerable <= 310 {
+		if g.countVulnerability <= 310 {
 			if g.currentImg == 0 {
 				g.currentImg = 1
 			} else {
@@ -157,6 +158,7 @@ func (g *ghost) updateImage() {
 	}
 }
 
+/*FINDING THE NEXT MOVE FOR THE GHOST*/
 func (g *ghost) findNextMove(m [][]elem, pac pos) {
 
 	if g.isVulnerable() {
@@ -182,7 +184,7 @@ func (g *ghost) findNextMove(m [][]elem, pac pos) {
 				continue
 			}
 			dir := input(v)
-			np := addPosDirection(dir, g.curPos)
+			np := addNextDirection(dir, g.curPos)
 			if canMove(m, np) && np != g.prevPos {
 				g.direction = dir
 				g.nextPos = np
@@ -190,11 +192,12 @@ func (g *ghost) findNextMove(m [][]elem, pac pos) {
 			}
 		}
 
-		g.direction = oppDir(g.direction)
+		g.direction = oppDirection(g.direction)
 	}
-	g.nextPos = addPosDirection(g.direction, g.curPos)
+	g.nextPos = addNextDirection(g.direction, g.curPos)
 }
 
+/*LOCALIZATION OF THE PLAYER*/
 func (g *ghost) localisePlayer(m [][]elem, pac pos) input {
 
 	maxY := len(m)
@@ -263,7 +266,7 @@ func (g *ghost) isMoving() bool {
 }
 
 func (g *ghost) isVulnerable() bool {
-	if g.ctVulnerable > 0 {
+	if g.countVulnerability > 0 {
 		return true
 	}
 	return false
@@ -271,14 +274,13 @@ func (g *ghost) isVulnerable() bool {
 
 func (g *ghost) endVulnerability() {
 	g.vulnerableMove = false
-	g.ctVulnerable = 0
+	g.countVulnerability = 0
 	g.eaten = false
 }
 
 /*COLLISION*/
 func (g *ghost) makeVulnerable() {
-	g.ctVulnerable = 1
-
+	g.countVulnerability = 1
 }
 
 func (g *ghost) resetGhost() {
