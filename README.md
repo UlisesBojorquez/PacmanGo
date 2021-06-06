@@ -13,7 +13,7 @@
 This pacman is a multithreaded version of the arcade video game [Pacman](https://en.wikipedia.org/wiki/Pac-Man). This version is a
 Computer vs Human game. Each enemy is independent and the number of enemies is configurable. 
 
-<p align="center"><img width=43% src="https://github.com/UlisesBojorquez/PacmanGo/blob/main/ReadmeResources/pacmanGameGif.gif"></p>
+<p align="center"><img width=43% src="https://github.com/UlisesBojorquez/PacmanGo/blob/main/ReadmeResources/Gameplay.gif"></p>
 
 ## Description
 - The game's maze layout is static.
